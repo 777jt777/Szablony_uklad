@@ -20,6 +20,7 @@ struct  LZespolona {
   LZespolona();
   LZespolona(double real, double imag);
   LZespolona &operator=(double i) ;
+  LZespolona &operator=(int i) ;
   double modul2() const;
 };
 
@@ -44,11 +45,17 @@ LZespolona  operator * (LZespolona  Skl1,double  l);
 
 LZespolona  operator / (LZespolona  Skl1,  LZespolona  Skl2);
 
-LZespolona  operator / (LZespolona  Skl1,  LZespolona  Skl2);
+LZespolona  operator / (LZespolona  Skl1,double l);
 
 LZespolona  operator += (LZespolona  Skl1,  LZespolona  Skl2);
 
 bool operator == (LZespolona  Skl1,  LZespolona  Skl2);
+
+bool operator == (LZespolona  Skl1, double l);
+
+bool operator != (LZespolona  Skl1,  LZespolona  Skl2);
+
+double  abs(LZespolona Skl1);
 
 std::istream & operator >>(std::istream & strm, LZespolona & Skl);
 

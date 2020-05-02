@@ -1,6 +1,6 @@
 #ifndef WEKTOR_HH
 #define WEKTOR_HH
-#include "rozmiar.h"
+
 #include <iostream>
 #include "LZespolona.hh"
 

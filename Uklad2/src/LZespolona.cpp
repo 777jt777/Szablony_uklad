@@ -29,12 +29,19 @@ this->re = i; this->im=0;
 return *this;
 }
 
+LZespolona & LZespolona::operator = (int i) 
+{
+this->re = i; this->im=0;
+return *this;
+}
+
 /* Definicja sprzezenia LZespolonej  */
 LZespolona sprzezenie(LZespolona LZ)
 {
 LZ.im=-LZ.im;
 return LZ;
 }
+
 /* Definicja operacji modulu liczby zespolonej  */
 double modul(LZespolona LZ)
 {
@@ -50,19 +57,14 @@ LM=sqrt(pow(re,2)+pow(im,2));
 return LM;
 }
 
-/* Definicja dzielenia przez lcizbe rzeczyiwsta  */
-LZespolona dzielenie(LZespolona Skl1, double x){
-LZespolona Wynik;
-if(x!=0){
-Wynik.im = Skl1.im/x;
-Wynik.re = Skl1.re/x;
-}
-else
+/* Przeciazenie abs */
+double abs(LZespolona Skl1) 
 {
-  cerr << "dzielenie przez 0!";
-}
+double Wynik;
+Wynik=Skl1.modul2();
 return Wynik;
 }
+
 
 /* sprzezenie += */
 LZespolona  operator += (LZespolona  Skl1,  LZespolona  Skl2) 
@@ -122,19 +124,18 @@ LZespolona  operator / (LZespolona  Skl1,  LZespolona  Skl2)
   double Lmod= modul(Skl2);
   Lmod=pow(Lmod,2);
   LZespolona a= Skl1 * Ls1;
-  Wynik=dzielenie(a,Lmod);
+  Wynik=a/Lmod;
   return Wynik;
 }
+
 /* sprzezenie dzielenia przez liczbe */
 LZespolona  operator / (LZespolona  Skl1,double l)
 {
- LZespolona  Wynik;
-
+  LZespolona  Wynik;
   Wynik.re = Skl1.re/l;
   Wynik.im = Skl1.im/l;
   return Wynik;
 }
-
 
 /* Sprzezenie operatora wyjscia */
 std::istream & operator >>(std::istream & strm, LZespolona & Skl)
@@ -153,13 +154,27 @@ std::istream & operator >>(std::istream & strm, LZespolona & Skl)
     return strm;
 }
 /* Sprzezenie operatora przyrownania */
-bool operator == (LZespolona  Skl1,  LZespolona  Skl2){
 
-if(Skl1.re==Skl2.re && Skl1.im==Skl2.im)
+bool operator == (LZespolona  Skl1,  LZespolona  Skl2){
+double epsilon=0.0000000000000000001;
+if(abs(Skl1.re-Skl2.re)<epsilon && abs(Skl1.im-Skl2.im)<epsilon)
 return true;
 else
 return false;
 }
+
+bool operator != (LZespolona  Skl1,  LZespolona  Skl2){
+  return(!(Skl1==Skl2));
+}
+
+bool operator == (LZespolona  Skl1,double l){
+double epsilon=0.0000000000000000001;
+if(abs(Skl1.re-l)<epsilon && abs(Skl1.im-l)<epsilon)
+return true;
+else
+return false;
+}
+
 
 
 std::ostream & operator << (std::ostream & strm, const LZespolona & Skl)

@@ -1,10 +1,12 @@
 #include "UkladRownanLiniowych.hh"
+#include "LZespolona.hh"
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 /*
  *  Tutaj nalezy zdefiniowac odpowiednie metody
- *  klasy UkladRownanLiniowych, ktore zawieraja 
+ *  klasy UkladRownanLiniowych<Typ,SWymiar>, ktore zawieraja 
  *  wiecej kodu niz dwie linijki.
  *  Mniejsze metody mozna definiwac w ciele klasy.
  */
@@ -13,27 +15,34 @@ using namespace std;
 
 
 
-
-  Macierz & UkladRownanLiniowych::get_A() 
+template<class Typ, int SWymiar>
+const Macierz<Typ,SWymiar> & UkladRownanLiniowych<Typ,SWymiar>::get_A() const 
  {
      return A;
  }
- Wektor & UkladRownanLiniowych::get_B() 
+
+template<class Typ, int SWymiar>
+const Wektor<Typ,SWymiar> & UkladRownanLiniowych<Typ,SWymiar>::get_B() const
  {
      return B;
  }
- void UkladRownanLiniowych::set_A(Macierz & N) const
+
+template<class Typ, int SWymiar>
+void UkladRownanLiniowych<Typ,SWymiar>::set_A(Macierz<Typ,SWymiar> & N) 
 {
-    N=A;
-}
- void UkladRownanLiniowych::set_B(Wektor & N) const
-{
-    N=B;
+    A=N;
 }
 
+template<class Typ, int SWymiar>
+void UkladRownanLiniowych<Typ,SWymiar>::set_B(Wektor<Typ,SWymiar> & N) 
+{
+    B=N;
+}
 
 
-const Macierz UkladRownanLiniowych::zamien(int i, Macierz A, Wektor B) const
+
+template<class Typ, int SWymiar>
+const Macierz<Typ,SWymiar> UkladRownanLiniowych<Typ,SWymiar>::zamien(int i, Macierz<Typ,SWymiar> A, Wektor<Typ,SWymiar> B) const
 {
 A=A.transponuj();
 A[i]=B;
@@ -41,54 +50,58 @@ A=A.transponuj();
 return A;
 }
 
-const Wektor UkladRownanLiniowych::Cramer(UkladRownanLiniowych Ukl) const
+template<class Typ, int SWymiar>
+const Wektor<Typ,SWymiar> UkladRownanLiniowych<Typ,SWymiar>::Cramer(UkladRownanLiniowych<Typ,SWymiar> Ukl) const
 {
-Wektor Wynik;
+Wektor<Typ,SWymiar> Wynik;
 int ilosc_zer=0;
-double wyzn;
+Typ wyzn;
 int i;
-
-wyzn=A.wyznacznik_sarrusa();
-for(i=0;i<ROZMIAR;i++)
+wyzn=A.wyznacznik_1();
+for(i=0;i<SWymiar;i++)
   {                 
-Wynik[i]=zamien(i,A,B).wyznacznik_sarrusa();
-if(Wynik[i]==0) 
+Wynik[i]=zamien(i,A,B).wyznacznik_1();
+if(Wynik[i]==0.0) 
 ilosc_zer++;
   }
-if(wyzn==0 && ilosc_zer==ROZMIAR)
+if(wyzn==0 && ilosc_zer==SWymiar)
 {
 cout <<"Rownanie ma nieskonczenie wiele rozwiazan"<<endl;   
 exit(0);
 }
-if(wyzn==0 && ilosc_zer!=ROZMIAR)
+if(wyzn==0 && ilosc_zer!=SWymiar)
       {
 cout <<"Rownanie nie ma rozwiazan"<<endl; 
 exit(0);  
       }
-for(i=0;i<ROZMIAR;i++)
-Wynik[i]/=wyzn;
+for(i=0;i<SWymiar;i++)
+Wynik[i]=Wynik[i]/wyzn;
 return Wynik;  
 }
 
 
-const void UkladRownanLiniowych::blad(UkladRownanLiniowych Ukl, Wektor Wynik) const {
-cout <<"Wektor bledu:"<<endl<< (A*Wynik-B)<<endl;
-cout <<"Dlugosc wektora bledu:"<<endl<< (A*Wynik-B).dlugosc()<<endl;
-}
-
-
-std::istream& operator >> (std::istream &Strm, UkladRownanLiniowych &UklRown)
+template<class Typ, int SWymiar>
+std::istream& operator >> (std::istream &Strm, UkladRownanLiniowych<Typ,SWymiar> &UklRown)
 {
-Strm>>UklRown.get_A()>>UklRown.get_B();
+Macierz<Typ,SWymiar> C;
+Wektor<Typ,SWymiar> D;
+Strm >> C >> D;
+UklRown.set_A(C);
+UklRown.set_B(D);
 return Strm;
 }
-std::ostream& operator << (std::ostream &Strm, const UkladRownanLiniowych &UklRown)
+
+
+template<class Typ, int SWymiar>
+std::ostream& operator << (std::ostream &Strm, const UkladRownanLiniowych<Typ,SWymiar> &UklRown)
 {
-Macierz mac;
-Wektor wek;     
-UklRown.set_A(mac);
-UklRown.set_B(wek);
-return Strm<<"Macierz"<<endl<<mac<<"Wektor"<<endl<<wek;
+Macierz<Typ,SWymiar> C = UklRown.get_A();
+Wektor<Typ,SWymiar> D = UklRown.get_B();
+for(int i =0 ; i<SWymiar; i++)
+{
+Strm<<C[i]<<"["<<D[i]<<"]"<<endl;
+}
+return Strm;
 }
 
 

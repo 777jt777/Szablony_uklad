@@ -1,50 +1,62 @@
 #ifndef MACIERZ_HH
 #define MACIERZ_HH
 
-#include "rozmiar.h"
 #include <iostream>
 #include "Wektor.hh"
+
 
 /*
  *  Tutaj trzeba opisac klase. Jakie pojecie modeluje ta klasa
  *  i jakie ma glowne cechy.
  */
-class Macierz 
+
+
+
+template<class Typ, int SWymiar>
+class Macierz
 {
-Wektor tab1[ROZMIAR];
+Wektor<Typ,SWymiar> tab1[SWymiar];
 public:
 
-Macierz(Wektor w1,Wektor w2,Wektor w3);
+//Macierz<Typ,SWymiar>( Wektor<Typ,SWymiar> w1, Wektor<Typ,SWymiar>w2, Wektor<Typ,SWymiar> w3);
 
 Macierz();
 
-Wektor & operator[](int index);
+Wektor<Typ,SWymiar> & operator[](int index);
 
-const Wektor & operator[](int index) const;
+const Wektor<Typ,SWymiar> & operator[](int index) const;
 
-const Wektor operator *(const Wektor & w1) const; //macierz razy wektor
+ Wektor<Typ,SWymiar> operator *(const Wektor<Typ,SWymiar>  & w1) const; //macierz razy wektor
 
-const Macierz operator *( Macierz  B) const ; //Macierz razy macierz
+ Macierz<Typ,SWymiar> operator *(Macierz<Typ,SWymiar>  B) const ; //Typ razy macierz
 
-const Macierz operator +(Macierz  B) const;
+ Macierz<Typ,SWymiar> operator +(Macierz<Typ,SWymiar> B) const;
 
-const Macierz operator -(Macierz  B) const;
+ Macierz<Typ,SWymiar> operator -(Macierz<Typ,SWymiar>  B) const;
 
-const Macierz operator *(double B) const; 
+ Macierz<Typ,SWymiar> operator *(Typ B) const; 
 
-const Macierz operator /(double B) const; 
+ Macierz<Typ,SWymiar> operator /(Typ B) const; 
 
-const Macierz transponuj()const;
+ Macierz<Typ,SWymiar> transponuj() const;
 
-const double wyznacznik_sarrusa() const;
+ Macierz<Typ,SWymiar> zamien_wiersz() const;
 
-const bool operator== (const Macierz & W2) const;
+ Typ wyznacznik_sarrusa() const;
+
+ Typ wyznacznik_1() const;
+
+ bool operator== (const Macierz<Typ,SWymiar> & W2) const;
+
+ bool operator!= (const Macierz<Typ,SWymiar> & W2) const;
 
 };
 
-std::ostream& operator << (std::ostream &Strm, const  Macierz &Mac);
+template<class Typ, int SWymiar>
+std::ostream& operator << (std::ostream &Strm, const  Macierz<Typ,SWymiar> &Mac);
 
-std::istream& operator >> (std::istream &Strm, Macierz &Mac);
+template<class Typ, int SWymiar>
+std::istream& operator >> (std::istream &Strm, Macierz<Typ,SWymiar> &Mac);
 
 
 #endif

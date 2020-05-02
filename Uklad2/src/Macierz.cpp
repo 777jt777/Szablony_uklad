@@ -1,33 +1,38 @@
 #include "Macierz.hh"
 #include "Wektor.hh"
+#include "LZespolona.hh"
 
 using namespace std;
 /*
  *  Tutaj nalezy zdefiniowac odpowiednie metody
- *  klasy Macierz, ktore zawieraja wiecej kodu
+ *  klasy Macierz<Typ,SWymiar>, ktore zawieraja wiecej kodu
  *  niz dwie linijki.
  *  Mniejsze metody mozna definiwac w ciele klasy.
  */
-Macierz::Macierz(Wektor x,Wektor y,Wektor z) //konstruktor macierzy
-{
 
-tab1[0]=x;
-tab1[1]=y;
-tab1[2]=z;
-
-}    
-Macierz::Macierz() //konstruktor domyslny
+template<class Typ, int SWymiar>  
+Macierz <Typ,SWymiar>::Macierz() //konstruktor domyslny
 {
-Wektor a;    
+Wektor<Typ,SWymiar> a;    
 tab1[0]=a;
 tab1[1]=a;
 tab1[2]=a;
 }
 
-
-Wektor & Macierz::operator[](int index) 
+template<class Typ, int SWymiar>
+Wektor<Typ,SWymiar> & Macierz<Typ,SWymiar>::operator[](int index) 
 {
- if (index < 0 || index >= ROZMIAR) 
+ if (index < 0 || index >= SWymiar) 
+ {
+      cerr << "poza zakresem" << endl;
+      exit(1);      
+ }
+ return tab1[index];
+}
+template<class Typ, int SWymiar>
+const Wektor<Typ,SWymiar> & Macierz <Typ,SWymiar>::operator[](int index) const
+{
+ if (index < 0 || index >= SWymiar) 
  {
       cerr << "poza zakresem" << endl;
       exit(1);      
@@ -35,26 +40,16 @@ Wektor & Macierz::operator[](int index)
  return tab1[index];
 }
 
-const Wektor & Macierz::operator[](int index) const
+template<class Typ, int SWymiar>
+ Macierz<Typ,SWymiar> Macierz<Typ,SWymiar>::transponuj() const //transpozycja Macierz<Typ,SWymiar>y
 {
- if (index < 0 || index >= ROZMIAR) 
- {
-      cerr << "poza zakresem" << endl;
-      exit(1);      
- }
- return tab1[index];
-}
-
-
-const Macierz Macierz::transponuj() const //transpozycja macierzy
-{
-Macierz mac;
+Macierz<Typ,SWymiar> mac;
 
 int i;
 int j;
-for(i=0;i<ROZMIAR;i++)
+for(i=0;i<SWymiar;i++)
 {
-for(j=0;j<ROZMIAR;j++)
+for(j=0;j<SWymiar;j++)
    {
 mac[i][j]=tab1[j][i];
     }
@@ -62,9 +57,10 @@ mac[i][j]=tab1[j][i];
 return mac;
 }
 
-const Wektor Macierz::operator*(const Wektor & w1) const // operator macierz razy wektor
+template<class Typ, int SWymiar>
+Wektor<Typ,SWymiar> Macierz<Typ,SWymiar>::operator*(const Wektor<Typ,SWymiar> & w1) const // operator Macierz<Typ,SWymiar> razy wektor
 {
-Wektor wekt;
+Wektor<Typ,SWymiar> wekt;
 int i;
 for(i=0;i<=2;i++)
 {
@@ -73,109 +69,98 @@ wekt[i]=tab1[i]*w1;
 return wekt;
 }
 
-const Macierz Macierz::operator *(Macierz  B) const // operator macierz razy macierz
+template<class Typ, int SWymiar>
+Macierz<Typ,SWymiar> Macierz<Typ,SWymiar>::operator *(Macierz<Typ,SWymiar>  B) const // operator Macierz<Typ,SWymiar> razy Macierz<Typ,SWymiar>
 {
-Macierz mac2;
-Macierz mac;
+Macierz<Typ,SWymiar> mac2;
+Macierz<Typ,SWymiar> mac;
 int i;
 mac2=*this;
 mac2=mac2.transponuj();
-for(i=0;i<ROZMIAR;i++)
+for(i=0;i<SWymiar;i++)
      {
 mac[i]=mac2*B[i];
      }
 return mac;              
 }
 
-
- const double Macierz::wyznacznik_sarrusa() const
+template<class Typ, int SWymiar>
+Typ Macierz<Typ,SWymiar>::wyznacznik_sarrusa() const
 {
-double Wynik;
+Typ Wynik;
 Wynik=tab1[0][0]*tab1[1][1]*tab1[2][2]+tab1[0][1]*tab1[1][2]*tab1[2][0]+tab1[0][2]*tab1[1][0]*tab1[2][1]-tab1[2][0]*tab1[1][1]*tab1[0][2]-tab1[2][1]*tab1[1][2]*tab1[0][0]-tab1[2][2]*tab1[1][0]*tab1[0][1];
 return Wynik;
 }
 
-/*  PROBA ZAIMPLEMENTOWANIA DLA N WYMIAROWEJ MACIERZY(nie dziala gdy na przekatnej jest 0)
-double Macierz::wyznacznik_1 ()                       (tylko wersja robocza)
+template<class Typ, int SWymiar>
+Typ Macierz<Typ,SWymiar>::wyznacznik_1() const
 {
-double Wynik;
-int j;
-double b=1;
-for(j=0;j<ROZMIAR-1;j++)   
-     {
-b*=tab1[j][j];
-tab1[j]=tab1[j]/tab1[j][j];
-tab1[j+1]=tab1[j+1]-tab1[j]*tab1[j+1][j];
-if(j==0)
-{
-tab1[j+2]=tab1[j+2]-tab1[j]*tab1[j+2][j];
-}
-     }           
-Wynik=tab1[0][0]*tab1[1][1]*tab1[2][2]*b;
-return Wynik;
+    Typ a;
+    Typ Wynik;
+    a=0;
+    Wynik=1;
+    Macierz <Typ,SWymiar> mac = (*this);
+    for ( int i = 0; i < SWymiar; ++i){
+        for ( int j = i+1; j < SWymiar; ++j){
+            a = mac[j][i]/mac[i][i];
+            for ( int k = i; k < SWymiar; ++k){
+                mac[j][k]=mac[j][k] - a*mac[i][k];
+            }
+        }
+    }
+    for ( int g = 0; g < SWymiar; ++g){
+        Wynik = mac[g][g]*Wynik;
+    }
+    return Wynik;   
 }
 
-Macierz Macierz::zamien() Funkcja zamieniania wierszy miejscami,potrzebna dla algorytmu dla n macierzy
-{                               (tylko wersja robocza)
-Macierz mac=*this;
+template<class Typ, int SWymiar>
+ Macierz<Typ,SWymiar> Macierz<Typ,SWymiar>::operator +(Macierz<Typ,SWymiar> B) const // operator dodawania Macierz<Typ,SWymiar>y
+
+{
+Macierz<Typ,SWymiar> mac;
 int i;
-for(i=1;i<=2;i++)
-{
-if(mac[0][0] || mac[1][1] || mac[2][2])
-{
-mac[0]=mac[i];
-}
-else
-exit(1);
-}
-return mac;
-}
-*/
-
-
-const Macierz Macierz::operator +(Macierz B) const // operator dodawania macierzy
-
-{
-Macierz mac;
-int i;
-for(i=0;i<ROZMIAR;i++)
+for(i=0;i<SWymiar;i++)
 {
 mac[i]=tab1[i]+B[i];
 }
 return mac;
 }
-
-const Macierz Macierz::operator -(Macierz  B) const // operator odejmowania macierzy
+template<class Typ, int SWymiar>
+ Macierz<Typ,SWymiar> Macierz<Typ,SWymiar>::operator -(Macierz<Typ,SWymiar>  B) const // operator odejmowania Macierz<Typ,SWymiar>y
 
 {
-Macierz mac;
+Macierz<Typ,SWymiar> mac;
 int i;
-for(i=0;i<ROZMIAR;i++)
+for(i=0;i<SWymiar;i++)
 {
 mac[i]=tab1[i]-B[i];
 }
 return mac;
 }
 
-const Macierz Macierz::operator *(double B) const // operator mnozenia macierzy przez liczbe
+template<class Typ, int SWymiar>
+Macierz<Typ,SWymiar> Macierz<Typ,SWymiar>::operator *(Typ B) const // operator mnozenia Macierz<Typ,SWymiar>y przez liczbe
 
 {
-Macierz mac;
+Macierz<Typ,SWymiar> mac;
 int i;
-for(i=0;i<ROZMIAR;i++)
+for(i=0;i<SWymiar;i++)
 {
 mac[i]=tab1[i]*B;
 }
 return mac;
 }
 
-const Macierz Macierz::operator /(double B) const // operator dzielenia macierzy przez liczbe
+/*
+template<class Typ, int SWymiar>
+const Macierz<Typ,SWymiar> Macierz<Typ,SWymiar>::operator /(Typ B) const // operator dzielenia Macierz<Typ,SWymiar>y przez liczbe
 {
-Macierz mac;
+Macierz<Typ,SWymiar> mac;
 int i;
 if(B!=0)
    {
-for(i=0;i<ROZMIAR;i++)
+for(i=0;i<SWymiar;i++)
 {
 mac[i]=tab1[i]/B;
 }
@@ -187,12 +172,13 @@ else
 }
 return mac;
 }
+*/
 
-
-const bool Macierz::operator== (const Macierz & W2) const //porownanie macierzy
+template<class Typ, int SWymiar>
+ bool Macierz<Typ,SWymiar>::operator== (const Macierz<Typ,SWymiar> & W2) const //porownanie Macierz<Typ,SWymiar>y
 {
 int i;
-for(i=0;i<ROZMIAR;i++){
+for(i=0;i<SWymiar;i++){
 W2[i]==tab1[i];
 return true;
 }
@@ -200,13 +186,34 @@ return false;
 }
 
 
-
-std::istream& operator >> (std::istream &Strm,  Macierz &Mac) // przeciazenie wejscia macierzy
+template<class Typ, int SWymiar>
+bool Macierz<Typ,SWymiar>::operator!= (const Macierz<Typ,SWymiar> & W2) const // Operator sprawdzenia nierownosci
 {
-Strm>>Mac[0]>>Mac[1]>>Mac[2];
+return !(*this==W2);
+}
+
+template<class Typ, int SWymiar>
+std::istream& operator >> (std::istream &Strm, Macierz<Typ,SWymiar> &Mac) // przeciazenie wejscia Macierz<Typ,SWymiar>y
+{
+int i;
+for(i=0;i<SWymiar;i++)
+{
+Strm>>Mac[i];
+}
+
 return Strm;
 }     
-std::ostream& operator << (std::ostream &Strm, const Macierz &Mac) // przeciazenie wyjscia macierzy
+template<class Typ, int SWymiar>
+std::ostream& operator << (std::ostream &Strm, const Macierz<Typ,SWymiar> &Mac) // przeciazenie wyjscia Macierz<Typ,SWymiar>y
 {
-return Strm<<Mac[0]<<endl<<Mac[1]<<endl<<Mac[2]<<endl; 
+int i;
+cout <<" ";
+Strm << "[";
+for(i=0;i<SWymiar;i++)
+{
+Strm<<Mac[i];
+cout <<" ";
+}
+Strm << "]";
+return Strm;
 }

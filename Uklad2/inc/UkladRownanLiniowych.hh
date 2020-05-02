@@ -9,36 +9,41 @@
  *  Tutaj trzeba opisac klase. Jakie pojecie modeluje ta klasa
  *  i jakie ma glowne cechy.
  */
+
+
+template<class Typ, int SWymiar>
 class UkladRownanLiniowych {
-Macierz A;
-Wektor B;
+    
+Macierz<Typ,SWymiar> A;
+Wektor<Typ,SWymiar> B;
 public:
+
 UkladRownanLiniowych() {};
 
-UkladRownanLiniowych(Macierz _A ,Wektor _B) : A(_A), B(_B) {};
+UkladRownanLiniowych(Macierz<Typ,SWymiar> _A ,Wektor<Typ,SWymiar> _B) : A(_A), B(_B) {};
 
- Macierz & get_A() ;
+const Macierz<Typ,SWymiar> & get_A() const ;
 
- Wektor & get_B() ;
+const Wektor<Typ,SWymiar> & get_B() const ;
 
-void set_A(Macierz & N) const;
+void set_A(Macierz<Typ,SWymiar> & N) ;
 
-void set_B(Wektor & N) const;
+void set_B(Wektor<Typ,SWymiar> & N) ;
 
-const Macierz zamien(int i, Macierz A, Wektor B) const ; //zamiana kolumny wektorow
+const Macierz<Typ,SWymiar> zamien(int i, Macierz<Typ,SWymiar> A, Wektor<Typ,SWymiar> B) const ; //zamiana kolumny wektorow
 
-const Wektor Cramer(UkladRownanLiniowych Ukl) const ; //rozwiazanie ukladu
+const Wektor<Typ,SWymiar> Cramer(UkladRownanLiniowych<Typ,SWymiar> Ukl) const ; //rozwiazanie ukladu
 
-const void blad(UkladRownanLiniowych Ukl, Wektor Wynik) const; //obliczanie bledu 
+
 };
 
 
 
+template<class Typ, int SWymiar>
+std::istream& operator >> (std::istream &Strm, UkladRownanLiniowych<Typ,SWymiar> &UklRown);
 
-std::istream& operator >> (std::istream &Strm, UkladRownanLiniowych &UklRown);
-
-
-std::ostream& operator << ( std::ostream &Strm,const UkladRownanLiniowych &UklRown);
+template<class Typ, int SWymiar>
+std::ostream& operator << ( std::ostream &Strm,const UkladRownanLiniowych<Typ,SWymiar> &UklRown);
 
 
 #endif

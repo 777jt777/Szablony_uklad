@@ -101,6 +101,7 @@ Wynik[i]=tab[i]*l2;
 return Wynik;
 }
 
+
 template<class Typ, int SWymiar>
 bool Wektor<Typ,SWymiar>::operator==(const Wektor<Typ,SWymiar> & W2) const  // Operator sprawdzenia rownosci
 {
@@ -114,18 +115,6 @@ return false;
 return true;
 }   
 
-template<> bool Wektor<LZespolona,5>::operator==(const Wektor<LZespolona,5> & W2) const
-{
-Wektor<LZespolona,5> Wynik;
-double epsilon=0.00000001;
-int i;
-for(i=0;i<5;i++)
-if(abs(tab[i].modul2()-W2[i].modul2())>epsilon)
-return false;
-return true;
-}
-
-
 template<class Typ, int SWymiar>
 Wektor<Typ,SWymiar> Wektor<Typ,SWymiar>::operator/ (Typ l2) const  // Operacja dzielenia wektora przez liczbe
 {
@@ -138,7 +127,7 @@ exit(1);
 }
 else
 {
-for(i=0;i<ROZMIAR;i++)
+for(i=0;i<SWymiar;i++)
 {
     {   
 Wynik[i]=tab[i]/l2;
@@ -147,6 +136,33 @@ Wynik[i]=tab[i]/l2;
  }
 return Wynik;
 }
+
+
+template<> Wektor<LZespolona,3> Wektor<LZespolona,3>::operator/(LZespolona l2) const
+{
+Wektor<LZespolona,3> Wynik;
+LZespolona LZ;
+LZ.re=0.0;
+LZ.im=0.0;
+int i;
+if(l2==LZ)
+{
+cerr<< "Dzielenie przez 0!";
+exit(1);
+}
+else
+{
+for(i=0;i<3;i++)
+{
+    {   
+Wynik[i]=tab[i]/l2;
+    }
+}
+ }
+return Wynik;
+}
+
+
 
 
 template<> Wektor<LZespolona,5> Wektor<LZespolona,5>::operator/(LZespolona l2) const
@@ -163,7 +179,7 @@ exit(1);
 }
 else
 {
-for(i=0;i<ROZMIAR;i++)
+for(i=0;i<5;i++)
 {
     {   
 Wynik[i]=tab[i]/l2;
