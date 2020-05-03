@@ -88,6 +88,7 @@ std::istream& operator >> (std::istream &Strm, UkladRownanLiniowych<Typ,SWymiar>
 Macierz<Typ,SWymiar> C;
 Wektor<Typ,SWymiar> D;
 Strm >> C >> D;
+C=C.transpozycja(); 
 UklRown.set_A(C);
 UklRown.set_B(D);
 return Strm;
