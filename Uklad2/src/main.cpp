@@ -14,6 +14,9 @@ int main()
 
 
 UkladRownanLiniowych<LZespolona,5> Ukl;
+Macierz<LZespolona,5> mac;
+
+
 cout << "Wpisz ukald rownan: "<<endl;
 cin >> Ukl;
 cout << Ukl;

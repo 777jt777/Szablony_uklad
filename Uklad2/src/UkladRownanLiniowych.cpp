@@ -44,11 +44,10 @@ void UkladRownanLiniowych<Typ,SWymiar>::set_B(Wektor<Typ,SWymiar> & N)
 template<class Typ, int SWymiar>
 const Macierz<Typ,SWymiar> UkladRownanLiniowych<Typ,SWymiar>::zamien(int i, Macierz<Typ,SWymiar> A, Wektor<Typ,SWymiar> B) const
 {
-A=A.transponuj();
 A[i]=B;
-A=A.transponuj();
 return A;
 }
+
 
 template<class Typ, int SWymiar>
 const Wektor<Typ,SWymiar> UkladRownanLiniowych<Typ,SWymiar>::Cramer(UkladRownanLiniowych<Typ,SWymiar> Ukl) const
@@ -76,6 +75,7 @@ exit(0);
       }
 for(i=0;i<SWymiar;i++)
 Wynik[i]=Wynik[i]/wyzn;
+
 return Wynik;  
 }
 

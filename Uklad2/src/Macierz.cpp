@@ -14,9 +14,10 @@ template<class Typ, int SWymiar>
 Macierz <Typ,SWymiar>::Macierz() //konstruktor domyslny
 {
 Wektor<Typ,SWymiar> a;    
-tab1[0]=a;
-tab1[1]=a;
-tab1[2]=a;
+for(int i; i<SWymiar;i++)
+{
+tab1[i]=a;
+}
 }
 
 template<class Typ, int SWymiar>

@@ -12,22 +12,13 @@ using namespace std;
 
 
 template<class Typ, int SWymiar>
-Wektor<Typ,SWymiar>::Wektor(Typ  xx,Typ  yy,Typ  zz)
-{
-tab[0]=xx;
-tab[1]=yy;
-tab[2]=zz;
-}
-
-
-template<class Typ, int SWymiar>
 Wektor<Typ,SWymiar>::Wektor()
 {
-tab[0]=0;
-tab[1]=0;
-tab[2]=0;  
+for(int i=0;i<SWymiar;i++)
+{
+tab[i]=0;
+}   
 }
-
 
 
 template<class Typ, int SWymiar>

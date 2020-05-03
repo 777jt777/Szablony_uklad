@@ -17,8 +17,6 @@ public:
 
 Wektor();
 
-Wektor(Typ  x,Typ  y,Typ  z);
-
 Typ & operator[] (int index) ;
 
 const Typ & operator[](int index) const ; 
