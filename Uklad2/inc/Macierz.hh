@@ -18,8 +18,6 @@ class Macierz
 Wektor<Typ,SWymiar> tab1[SWymiar];
 public:
 
-//Macierz<Typ,SWymiar>( Wektor<Typ,SWymiar> w1, Wektor<Typ,SWymiar>w2, Wektor<Typ,SWymiar> w3);
-
 Macierz();
 
 Wektor<Typ,SWymiar> & operator[](int index);

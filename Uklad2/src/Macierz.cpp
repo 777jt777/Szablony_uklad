@@ -152,27 +152,6 @@ mac[i]=tab1[i]*B;
 return mac;
 }
 
-/*
-template<class Typ, int SWymiar>
-const Macierz<Typ,SWymiar> Macierz<Typ,SWymiar>::operator /(Typ B) const // operator dzielenia Macierz<Typ,SWymiar>y przez liczbe
-{
-Macierz<Typ,SWymiar> mac;
-int i;
-if(B!=0)
-   {
-for(i=0;i<SWymiar;i++)
-{
-mac[i]=tab1[i]/B;
-}
-   }
-else
-{
-     cerr<< "Dzielenie przez 0!";
-     exit(1);
-}
-return mac;
-}
-*/
 
 template<class Typ, int SWymiar>
  bool Macierz<Typ,SWymiar>::operator== (const Macierz<Typ,SWymiar> & W2) const //porownanie Macierz<Typ,SWymiar>y

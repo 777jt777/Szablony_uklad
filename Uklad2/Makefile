@@ -1,4 +1,5 @@
-CPPFLAGS= -c -g -Iinc -Wall -pedantic
+CPPFLAGS= -c -g -Iinc -Wall -pedantic -std=c++14 -iquote inc
+
 
 _start_: uklad_rownan
 	./uklad_rownan < dane.txt
