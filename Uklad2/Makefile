@@ -1,4 +1,4 @@
-CPPFLAGS= -c -g -Iinc -Wall -pedantic -std=c++14 -iquote inc
+CPPFLAGS= -c -g -Iinc -Wall -pedantic -std=c++17 -iquote inc
 
 
 _start_: uklad_rownan
